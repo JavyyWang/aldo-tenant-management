@@ -25,6 +25,18 @@ import {
   MenuItem,
   SplitButton,
   MenuSplitButtonProps,
+  Dialog,
+  DialogTrigger,
+  DialogSurface,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogBody,
+  Field,
+  Textarea,
+  Input,
+  Radio,
+  RadioGroup,
 } from '@fluentui/react-components';
 import {
   Add20Regular,
@@ -39,6 +51,8 @@ import {
   MoreHorizontal20Regular,
   Dismiss20Regular,
   ChevronDown20Regular,
+  Comment20Regular,
+  Send20Regular,
 } from '@fluentui/react-icons';
 
 const IdentityManagement = () => {
@@ -55,6 +69,15 @@ const IdentityManagement = () => {
     tenantAdmin: '',
     spnPermissions: false,
     selfService: false
+  });
+
+  // Feedback widget state
+  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
+  const [feedbackData, setFeedbackData] = useState({
+    type: 'suggestion',
+    page: '',
+    message: '',
+    email: ''
   });
 
   const renderBladeHeader = () => {
@@ -231,6 +254,146 @@ const IdentityManagement = () => {
           </Badge>
         </div>
       </div>
+    );
+  };
+
+  // Feedback functions
+  const handleFeedbackSubmit = () => {
+    const { type, page, message, email } = feedbackData;
+    const currentPage = selectedTab;
+    
+    // Create GitHub issue URL with pre-filled data
+    const title = encodeURIComponent(`[${type.toUpperCase()}] Feedback on ${currentPage || page}`);
+    const body = encodeURIComponent(`
+**Feedback Type**: ${type}
+**Page/Section**: ${currentPage || page}
+**Contact**: ${email}
+
+**Message**:
+${message}
+
+---
+*Submitted via prototype feedback widget*
+    `);
+    
+    const githubIssueUrl = `https://github.com/JavyyWang/aldo-tenant-management/issues/new?title=${title}&body=${body}`;
+    
+    // Open GitHub issue in new tab
+    window.open(githubIssueUrl, '_blank');
+    
+    // Reset form and close dialog
+    setFeedbackData({
+      type: 'suggestion',
+      page: '',
+      message: '',
+      email: ''
+    });
+    setShowFeedbackDialog(false);
+  };
+
+  const getPageDisplayName = () => {
+    const pageNames = {
+      'sources': 'Identity Sources',
+      'groups': 'Tenant Groups',
+      'units': 'Administrative Units',
+      'federation': 'Federation Endpoints',
+      'portals': 'Portal Endpoints'
+    };
+    return pageNames[selectedTab] || 'General';
+  };
+
+  const renderFeedbackDialog = () => {
+    return (
+      <Dialog open={showFeedbackDialog} onOpenChange={(_, data) => setShowFeedbackDialog(data.open)}>
+        <DialogSurface style={{ maxWidth: '500px' }}>
+          <DialogBody>
+            <DialogTitle>💬 Share Your Feedback</DialogTitle>
+            <DialogContent style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Body2>Help us improve the prototype by sharing your thoughts and suggestions.</Body2>
+              
+              <Field label="Feedback Type">
+                <RadioGroup
+                  value={feedbackData.type}
+                  onChange={(e, data) => setFeedbackData({...feedbackData, type: data.value})}
+                >
+                  <Radio value="suggestion" label="💡 Suggestion" />
+                  <Radio value="bug" label="🐛 Bug Report" />
+                  <Radio value="question" label="❓ Question" />
+                  <Radio value="improvement" label="⚡ Improvement" />
+                </RadioGroup>
+              </Field>
+
+              <Field label="Page/Section">
+                <Input
+                  value={feedbackData.page || getPageDisplayName()}
+                  onChange={(e) => setFeedbackData({...feedbackData, page: e.target.value})}
+                  placeholder={`Currently on: ${getPageDisplayName()}`}
+                />
+              </Field>
+
+              <Field label="Your Message *">
+                <Textarea
+                  value={feedbackData.message}
+                  onChange={(e) => setFeedbackData({...feedbackData, message: e.target.value})}
+                  placeholder="Describe your feedback, suggestion, or issue..."
+                  rows={4}
+                  resize="vertical"
+                />
+              </Field>
+
+              <Field label="Email (Optional)">
+                <Input
+                  type="email"
+                  value={feedbackData.email}
+                  onChange={(e) => setFeedbackData({...feedbackData, email: e.target.value})}
+                  placeholder="your.email@company.com"
+                />
+              </Field>
+            </DialogContent>
+            <DialogActions>
+              <Button 
+                appearance="secondary" 
+                onClick={() => setShowFeedbackDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                appearance="primary" 
+                icon={<Send20Regular />}
+                onClick={handleFeedbackSubmit}
+                disabled={!feedbackData.message.trim()}
+              >
+                Submit Feedback
+              </Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
+    );
+  };
+
+  const renderFeedbackButton = () => {
+    return (
+      <Button
+        appearance="primary"
+        icon={<Comment20Regular />}
+        onClick={() => {
+          setFeedbackData({...feedbackData, page: getPageDisplayName()});
+          setShowFeedbackDialog(true);
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          borderRadius: '50px',
+          padding: '12px 20px',
+          zIndex: 999,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          fontWeight: '600'
+        }}
+      >
+        💬 Feedback
+      </Button>
     );
   };
 
@@ -908,6 +1071,10 @@ const IdentityManagement = () => {
         
         {/* Wizard Modal */}
         {renderWizard()}
+        
+        {/* Feedback Widget */}
+        {renderFeedbackDialog()}
+        {renderFeedbackButton()}
       </div>
     </FluentProvider>
   );

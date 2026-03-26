@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/aldo-tenant-management/static/js/main.22be1930.js",
+    "main.js": "/aldo-tenant-management/static/js/main.d136794c.js",
     "index.html": "/aldo-tenant-management/index.html",
-    "main.22be1930.js.map": "/aldo-tenant-management/static/js/main.22be1930.js.map"
+    "main.d136794c.js.map": "/aldo-tenant-management/static/js/main.d136794c.js.map"
   },
   "entrypoints": [
-    "static/js/main.22be1930.js"
+    "static/js/main.d136794c.js"
   ]
 }

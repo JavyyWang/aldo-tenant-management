@@ -101,9 +101,7 @@ If you want to explore or modify the prototype locally:
 ```bash
 npm install
 npm start
-
----
-
+```
 
 ### How to Contribute
 Design‑first contributions are welcome, especially:

@@ -74,3 +74,30 @@ Think of this as **design scaffolding**, not a finished system.
 ## How to Read the Repo (Design‑first)
 
 This is a React application. The **design lives in the pages**, not documentation.
+
+---
+
+
+Each `.jsx` file represents a **screen or experience**. When reviewing, focus on:
+- Page structure
+- Terminology and labels
+- Navigation patterns
+- What is included vs intentionally omitted
+
+---
+
+## Viewing the Design
+
+### Live prototype (recommended)
+The prototype is deployed via GitHub Pages:
+
+https://javyywang.github.io/aldo-tenant-management/
+
+This is the **primary artefact for design review**.
+
+### Run locally (optional)
+If you want to explore or modify the prototype locally:
+
+```bash
+npm install
+npm start

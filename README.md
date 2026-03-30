@@ -101,3 +101,45 @@ If you want to explore or modify the prototype locally:
 ```bash
 npm install
 npm start
+
+---
+
+
+### How to Contribute
+Design‑first contributions are welcome, especially:
+
+### Clarifying design intent
+Improving terminology and labels
+Exploring alternative flows
+Documenting assumptions and open questions
+
+---
+
+### Preferred contribution styles:
+
+Small PRs with focused changes
+GitHub Issues for design discussions
+Documentation additions that clarify intent
+
+---
+
+### Open Design Questions
+This prototype intentionally leaves space to explore:
+
+Tenant grouping vs invitation‑based access
+Delegation boundaries across tenants
+Operator vs tenant admin responsibilities
+How much Azure parity is helpful vs misleading
+
+These questions are best explored visually before committing to implementation.
+
+Related Artefacts
+
+PRD: ALDO – Multi‑tenant IDP
+Reference model: Azure multi‑tenancy and administrative units
+
+---
+
+### TL;DR
+This repository is a design proposal expressed as a working UI.
+Read it like a clickable Figma file — just implemented in JSX instead of frames.

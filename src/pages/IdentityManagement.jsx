@@ -5,6 +5,8 @@ import {
   Title1,
   Title2,
   Title3,
+  Subtitle1,
+  Subtitle2,
   TabList,
   Tab,
   Button,
@@ -56,6 +58,7 @@ import {
 } from '@fluentui/react-icons';
 
 const IdentityManagement = () => {
+  // Updated grid styles applied - Version 2.0 
   const [selectedTab, setSelectedTab] = useState('sources');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
@@ -655,6 +658,7 @@ ${message}
       sourceName: 'Corporate Azure AD',
       directoryType: 'Azure Active Directory',
       tenantDomain: 'contoso.onmicrosoft.com',
+      federationUrl: 'https://login.microsoftonline.com/contoso.onmicrosoft.com',
       status: 'active'
     },
     {
@@ -662,6 +666,7 @@ ${message}
       sourceName: 'Partner LDAP',
       directoryType: 'LDAP',
       tenantDomain: 'partners.corp.local',
+      federationUrl: 'https://federation.partners.corp.local/saml',
       status: 'pending'
     },
     {
@@ -669,6 +674,7 @@ ${message}
       sourceName: 'External SAML',
       directoryType: 'SAML 2.0',
       tenantDomain: 'external.company.com',
+      federationUrl: 'https://sso.external.company.com/saml',
       status: 'active'
     }
   ];
@@ -727,30 +733,6 @@ ${message}
     }
   ];
 
-  const federationEndpointsData = [
-    {
-      id: 1,
-      endpointName: 'Corporate Federation',
-      assignedSource: 'Corporate Azure AD',
-      url: 'https://login.microsoftonline.com/contoso.onmicrosoft.com',
-      status: 'active'
-    },
-    {
-      id: 2,
-      endpointName: 'Partner LDAP Federation',
-      assignedSource: 'Partner LDAP',
-      url: 'https://federation.partners.corp.local/saml',
-      status: 'pending'
-    },
-    {
-      id: 3,
-      endpointName: 'External SAML Federation',
-      assignedSource: 'External SAML',
-      url: 'https://sso.external.company.com/saml',
-      status: 'active'
-    }
-  ];
-
   const portalEndpointsData = [
     {
       id: 1,
@@ -772,7 +754,15 @@ ${message}
 
   const renderStatusBadge = (status) => {
     return (
-      <Badge appearance={status === 'active' ? 'filled' : 'outline'} color={status === 'active' ? 'brand' : 'warning'}>
+      <Badge 
+        appearance={status === 'active' ? 'filled' : 'outline'} 
+        color={status === 'active' ? 'success' : 'warning'}
+        style={{
+          textTransform: 'capitalize',
+          fontSize: '12px',
+          padding: '4px 8px'
+        }}
+      >
         {status}
       </Badge>
     );
@@ -780,17 +770,68 @@ ${message}
 
   const renderActionsCell = (row) => {
     return (
-      <div style={{ display: 'flex', gap: '8px' }}>
+      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
         {selectedTab === 'groups' && row.adminUnitName ? (
           <>
-            <Button size="small" onClick={() => setSelectedAdminUnit(row)}>View Details</Button>
-            <Button size="small">Edit</Button>
-            <Button size="small">Delete</Button>
+            <Button 
+              size="small" 
+              appearance="outline"
+              style={{
+                minHeight: '24px',
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+              onClick={() => setSelectedAdminUnit(row)}
+            >
+              View Details
+            </Button>
+            <Button 
+              size="small" 
+              appearance="outline"
+              style={{
+                minHeight: '24px',
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+            >
+              Edit
+            </Button>
+            <Button 
+              size="small" 
+              appearance="outline"
+              style={{
+                minHeight: '24px',
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+            >
+              Delete
+            </Button>
           </>
         ) : (
           <>
-            <Button size="small">Edit</Button>
-            <Button size="small">Delete</Button>
+            <Button 
+              size="small" 
+              appearance="outline"
+              style={{
+                minHeight: '24px',
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+            >
+              Edit
+            </Button>
+            <Button 
+              size="small" 
+              appearance="outline"
+              style={{
+                minHeight: '24px',
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+            >
+              Delete
+            </Button>
           </>
         )}
       </div>
@@ -799,29 +840,54 @@ ${message}
 
   const renderTable = (headers, data, renderRow) => {
     return (
-      <div style={{ border: '1px solid #e1dfdd', borderRadius: '4px' }}>
+      <div style={{ 
+        border: '1px solid #e1dfdd', 
+        borderRadius: '6px',
+        backgroundColor: '#ffffff',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)'
+      }}>
         {/* Table Header */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: `repeat(${headers.length}, 1fr)`,
-          backgroundColor: '#f3f2f1',
-          padding: '12px',
-          borderBottom: '1px solid #e1dfdd'
+          backgroundColor: '#fafafa',
+          padding: '16px 20px',
+          borderBottom: '1px solid #e1dfdd',
+          minHeight: '52px',
+          alignItems: 'center'
         }}>
           {headers.map((header, index) => (
-            <Body1 key={index} weight="semibold">{header}</Body1>
+            <Body2 key={index} style={{ 
+              fontWeight: '600', 
+              color: '#323130',
+              fontSize: '14px'
+            }}>{header}</Body2>
           ))}
         </div>
         
         {/* Table Body */}
         <div>
           {data.map((row, index) => (
-            <div key={row.id} style={{ 
-              display: 'grid', 
-              gridTemplateColumns: `repeat(${headers.length}, 1fr)`,
-              padding: '12px',
-              borderBottom: index < data.length - 1 ? '1px solid #e1dfdd' : 'none'
-            }}>
+            <div 
+              key={row.id} 
+              style={{ 
+                display: 'grid', 
+                gridTemplateColumns: `repeat(${headers.length}, 1fr)`,
+                padding: '16px 20px',
+                borderBottom: index < data.length - 1 ? '1px solid #edebe9' : 'none',
+                minHeight: '60px',
+                alignItems: 'center',
+                backgroundColor: '#ffffff',
+                transition: 'background-color 0.1s ease',
+                cursor: 'default'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f8f8f8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+              }}
+            >
               {renderRow(row)}
             </div>
           ))}
@@ -831,12 +897,15 @@ ${message}
   };
 
   const renderIdentitySourcesTab = () => {
-    const headers = ['Source Name', 'Directory Type', 'Tenant/Domain', 'Status', 'Actions'];
+    const headers = ['Source Name', 'Directory Type', 'Tenant/Domain', 'Federation URL', 'Status', 'Actions'];
     
     const renderRow = (row) => [
-      <Body1 key="name">{row.sourceName}</Body1>,
-      <Body1 key="type">{row.directoryType}</Body1>,
-      <Body1 key="domain">{row.tenantDomain}</Body1>,
+      <Body2 key="name" style={{ fontWeight: '500', color: '#323130' }}>{row.sourceName}</Body2>,
+      <Body2 key="type" style={{ color: '#605e5c' }}>{row.directoryType}</Body2>,
+      <Body2 key="domain" style={{ color: '#605e5c' }}>{row.tenantDomain}</Body2>,
+      <Body2 key="url" style={{ color: '#0078d4', textDecoration: 'none', cursor: 'pointer' }} title={row.federationUrl}>
+        {row.federationUrl.length > 40 ? row.federationUrl.substring(0, 40) + '...' : row.federationUrl}
+      </Body2>,
       renderStatusBadge(row.status),
       renderActionsCell(row)
     ];
@@ -852,12 +921,12 @@ ${message}
     const headers = ['Administrative Unit Name', 'Associated Tenants', 'Tenant Admin', 'Subscriptions', 'SPN Permissions', 'Workflow Phase', 'Actions'];
     
     const renderRow = (row) => [
-      <Body1 key="name" weight="semibold">{row.adminUnitName}</Body1>,
-      <Body1 key="tenants">{row.associatedTenants}</Body1>,
-      <Body1 key="admin">{row.tenantAdmin}</Body1>,
-      <Body1 key="subscriptions">{row.subscriptions}</Body1>,
-      <Body1 key="spn">{row.spnPermissions}</Body1>,
-      <Body1 key="phase">{row.phase}</Body1>,
+      <Body2 key="name" style={{ fontWeight: '600', color: '#323130' }}>{row.adminUnitName}</Body2>,
+      <Body2 key="tenants" style={{ color: '#605e5c' }}>{row.associatedTenants}</Body2>,
+      <Body2 key="admin" style={{ color: '#605e5c' }}>{row.tenantAdmin}</Body2>,
+      <Body2 key="subscriptions" style={{ color: '#605e5c' }}>{row.subscriptions}</Body2>,
+      <Body2 key="spn" style={{ color: '#605e5c' }}>{row.spnPermissions}</Body2>,
+      <Body2 key="phase" style={{ color: '#605e5c' }}>{row.phase}</Body2>,
       renderActionsCell(row)
     ];
 
@@ -889,71 +958,158 @@ ${message}
         
         {renderTable(headers, tenantGroupsData, renderRow)}
         
-        {/* Detailed Administrative Unit View */}
-        {selectedAdminUnit && (
-          <div style={{ 
-            marginTop: '24px',
-            padding: '16px', 
-            backgroundColor: '#f3f2f1', 
-            borderRadius: '4px',
-            border: '1px solid #e1dfdd' 
+
+      </div>
+    );
+  };
+
+  // Side Panel Component for Detailed Administrative Unit View
+  const renderSidePanel = () => {
+    if (!selectedAdminUnit) return null;
+
+    return (
+      <>
+        {/* Backdrop overlay */}
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 1000,
+            transition: 'opacity 0.3s ease-in-out'
+          }}
+          onClick={() => setSelectedAdminUnit(null)}
+        />
+        
+        {/* Side Panel */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '520px',
+          backgroundColor: '#ffffff',
+          boxShadow: '-4px 0 16px rgba(0, 0, 0, 0.14)',
+          zIndex: 1001,
+          transform: 'translateX(0)',
+          transition: 'transform 0.3s ease-in-out',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          {/* Panel Header */}
+          <div style={{
+            padding: '20px 24px',
+            borderBottom: '1px solid #e1dfdd',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#faf9f8'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <Title1>Administrative Unit: {selectedAdminUnit.adminUnitName}</Title1>
-              <Button onClick={() => setSelectedAdminUnit(null)}>Close Details</Button>
+            <div>
+              <Title2>Administrative Unit</Title2>
+              <Subtitle1 style={{ color: '#605e5c' }}>{selectedAdminUnit.adminUnitName}</Subtitle1>
             </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-              {/* Unit Overview */}
-              <div>
-                <Body1 weight="semibold">Unit Configuration</Body1>
-                <Divider style={{ margin: '8px 0' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Body1><strong>Associated Tenants:</strong> {selectedAdminUnit.associatedTenants}</Body1>
-                  <Body1><strong>Tenant Admin:</strong> {selectedAdminUnit.tenantAdmin}</Body1>
-                  <Body1><strong>Subscriptions:</strong> {selectedAdminUnit.subscriptions}</Body1>
-                  <Body1><strong>SPN Permissions:</strong> {selectedAdminUnit.spnPermissions}</Body1>
-                  <Body1><strong>Current Phase:</strong> {selectedAdminUnit.phase}</Body1>
+            <Button 
+              appearance="subtle" 
+              icon={<Dismiss20Regular />}
+              onClick={() => setSelectedAdminUnit(null)}
+            />
+          </div>
+          
+          {/* Panel Content */}
+          <div style={{ 
+            flex: 1, 
+            overflow: 'auto',
+            padding: '24px'
+          }}>
+            <div style={{ marginBottom: '32px' }}>
+              <Subtitle1 style={{ marginBottom: '16px' }}>Unit Configuration</Subtitle1>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Body2 style={{ fontWeight: '600', color: '#424242' }}>Associated Tenants</Body2>
+                  <Body2>{selectedAdminUnit.associatedTenants}</Body2>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Body2 style={{ fontWeight: '600', color: '#424242' }}>Tenant Admin</Body2>
+                  <Body2>{selectedAdminUnit.tenantAdmin}</Body2>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Body2 style={{ fontWeight: '600', color: '#424242' }}>Subscriptions</Body2>
+                  <Body2>{selectedAdminUnit.subscriptions}</Body2>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Body2 style={{ fontWeight: '600', color: '#424242' }}>SPN Permissions</Body2>
+                  <Body2>{selectedAdminUnit.spnPermissions}</Body2>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Body2 style={{ fontWeight: '600', color: '#424242' }}>Current Phase</Body2>
+                  <Body2>{selectedAdminUnit.phase}</Body2>
                 </div>
               </div>
-              
-              {/* Workflow Actions */}
-              <div>
-                <Body1 weight="semibold">Available Actions</Body1>
-                <Divider style={{ margin: '8px 0' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Button>Associate Additional Tenants</Button>
-                  <Button>Assign/Change Tenant Admin</Button>
-                  <Button>Create New Subscription</Button>
-                  <Button>Configure SPN Permissions</Button>
-                  <Button>View User/Group Directory Source</Button>
-                </div>
+            </div>
+            
+            <div style={{ marginBottom: '32px' }}>
+              <Subtitle1 style={{ marginBottom: '16px' }}>Available Actions</Subtitle1>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Button appearance="outline" style={{ justifyContent: 'flex-start' }}>
+                  Associate Additional Tenants
+                </Button>
+                <Button appearance="outline" style={{ justifyContent: 'flex-start' }}>
+                  Assign/Change Tenant Admin
+                </Button>
+                <Button appearance="outline" style={{ justifyContent: 'flex-start' }}>
+                  Create New Subscription
+                </Button>
+                <Button appearance="outline" style={{ justifyContent: 'flex-start' }}>
+                  Configure SPN Permissions
+                </Button>
+                <Button appearance="outline" style={{ justifyContent: 'flex-start' }}>
+                  View User/Group Directory Source
+                </Button>
               </div>
             </div>
             
-            {/* Phase-Specific Details */}
-            <div style={{ marginTop: '16px' }}>
-              <Body1 weight="semibold">Workflow Phase Details</Body1>
-              <Divider style={{ margin: '8px 0' }} />
-              {selectedAdminUnit.phase.includes('Phase 1') && (
-                <Body1><strong>Phase 1 - Setup:</strong> Create Administrative Unit, associate tenants (Fabrikam, Contoso), review directory sourcing</Body1>
-              )}
-              {selectedAdminUnit.phase.includes('Phase 2') && (
-                <Body1><strong>Phase 2 - Delegation:</strong> Assign tenant admin rights to {selectedAdminUnit.tenantAdmin}, create subscriptions under unit</Body1>
-              )}
-              {selectedAdminUnit.phase.includes('Phase 3') && (
-                <Body1><strong>Phase 3 - Tenant Configuration:</strong> Tenant admin configures SPN permissions and user access within delegated scope</Body1>
-              )}
-              {selectedAdminUnit.phase.includes('Phase 4') && (
-                <Body1><strong>Phase 4 - End-User Actions:</strong> Users create Service Principals within allowed scope</Body1>
-              )}
-              {selectedAdminUnit.phase.includes('Phase 5') && (
-                <Body1><strong>Phase 5 - Ongoing Administration:</strong> Tenant admin manages SPNs, users, and access within the Administrative Unit</Body1>
-              )}
+            <div>
+              <Subtitle1 style={{ marginBottom: '16px' }}>Workflow Phase Details</Subtitle1>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {selectedAdminUnit.phase.includes('Phase 1') && (
+                  <div style={{ padding: '12px', backgroundColor: '#f3f2f1', borderRadius: '4px', border: '1px solid #e1dfdd' }}>
+                    <Body2 style={{ fontWeight: '600', marginBottom: '4px' }}>Phase 1 - Setup</Body2>
+                    <Body2 style={{ color: '#605e5c' }}>Create Administrative Unit, associate tenants (Fabrikam, Contoso), review directory sourcing</Body2>
+                  </div>
+                )}
+                {selectedAdminUnit.phase.includes('Phase 2') && (
+                  <div style={{ padding: '12px', backgroundColor: '#f3f2f1', borderRadius: '4px', border: '1px solid #e1dfdd' }}>
+                    <Body2 style={{ fontWeight: '600', marginBottom: '4px' }}>Phase 2 - Delegation</Body2>
+                    <Body2 style={{ color: '#605e5c' }}>Assign tenant admin rights to {selectedAdminUnit.tenantAdmin}, create subscriptions under unit</Body2>
+                  </div>
+                )}
+                {selectedAdminUnit.phase.includes('Phase 3') && (
+                  <div style={{ padding: '12px', backgroundColor: '#f3f2f1', borderRadius: '4px', border: '1px solid #e1dfdd' }}>
+                    <Body2 style={{ fontWeight: '600', marginBottom: '4px' }}>Phase 3 - Tenant Configuration</Body2>
+                    <Body2 style={{ color: '#605e5c' }}>Tenant admin configures SPN permissions and user access within delegated scope</Body2>
+                  </div>
+                )}
+                {selectedAdminUnit.phase.includes('Phase 4') && (
+                  <div style={{ padding: '12px', backgroundColor: '#f3f2f1', borderRadius: '4px', border: '1px solid #e1dfdd' }}>
+                    <Body2 style={{ fontWeight: '600', marginBottom: '4px' }}>Phase 4 - End-User Actions</Body2>
+                    <Body2 style={{ color: '#605e5c' }}>Users create Service Principals within allowed scope</Body2>
+                  </div>
+                )}
+                {selectedAdminUnit.phase.includes('Phase 5') && (
+                  <div style={{ padding: '12px', backgroundColor: '#f3f2f1', borderRadius: '4px', border: '1px solid #e1dfdd' }}>
+                    <Body2 style={{ fontWeight: '600', marginBottom: '4px' }}>Phase 5 - Ongoing Administration</Body2>
+                    <Body2 style={{ color: '#605e5c' }}>Tenant admin manages SPNs, users, and access within the Administrative Unit</Body2>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </>
     );
   };
 
@@ -961,11 +1117,11 @@ ${message}
     const headers = ['Unit Name', 'Scope (Subscription/Mgmt Group)', 'Tenant Admin', 'RBAC Scope', 'Self-service', 'Actions'];
     
     const renderRow = (row) => [
-      <Body1 key="name">{row.unitName}</Body1>,
-      <Body1 key="scope">{row.scope}</Body1>,
-      <Body1 key="admin">{row.tenantAdmin}</Body1>,
-      <Body1 key="rbac">{row.rbacScope}</Body1>,
-      <Body1 key="selfservice">{row.selfService}</Body1>,
+      <Body2 key="name" style={{ fontWeight: '500', color: '#323130' }}>{row.unitName}</Body2>,
+      <Body2 key="scope" style={{ color: '#605e5c' }}>{row.scope}</Body2>,
+      <Body2 key="admin" style={{ color: '#605e5c' }}>{row.tenantAdmin}</Body2>,
+      <Body2 key="rbac" style={{ color: '#605e5c' }}>{row.rbacScope}</Body2>,
+      <Body2 key="selfservice" style={{ color: '#605e5c' }}>{row.selfService}</Body2>,
       renderActionsCell(row)
     ];
 
@@ -976,32 +1132,14 @@ ${message}
     );
   };
 
-  const renderFederationEndpointsTab = () => {
-    const headers = ['Endpoint Name', 'Assigned Source Directory', 'URL', 'Status', 'Actions'];
-    
-    const renderRow = (row) => [
-      <Body1 key="name">{row.endpointName}</Body1>,
-      <Body1 key="source">{row.assignedSource}</Body1>,
-      <Body1 key="url">{row.url}</Body1>,
-      renderStatusBadge(row.status),
-      renderActionsCell(row)
-    ];
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {renderTable(headers, federationEndpointsData, renderRow)}
-      </div>
-    );
-  };
-
   const renderPortalEndpointsTab = () => {
     const headers = ['Endpoint Name', 'Tenant', 'Reverse Proxy URL', 'Redirect IDP', 'Status', 'Actions'];
     
     const renderRow = (row) => [
-      <Body1 key="name">{row.endpointName}</Body1>,
-      <Body1 key="tenant">{row.tenant}</Body1>,
-      <Body1 key="proxy">{row.reverseProxyUrl}</Body1>,
-      <Body1 key="redirect">{row.redirectIdp}</Body1>,
+      <Body2 key="name" style={{ fontWeight: '500', color: '#323130' }}>{row.endpointName}</Body2>,
+      <Body2 key="tenant" style={{ color: '#605e5c' }}>{row.tenant}</Body2>,
+      <Body2 key="proxy" style={{ color: '#605e5c' }}>{row.reverseProxyUrl}</Body2>,
+      <Body2 key="redirect" style={{ color: '#605e5c' }}>{row.redirectIdp}</Body2>,
       renderStatusBadge(row.status),
       renderActionsCell(row)
     ];
@@ -1021,8 +1159,6 @@ ${message}
         return renderTenantGroupsTab();
       case 'units':
         return renderAdministrativeUnitsTab();
-      case 'federation':
-        return renderFederationEndpointsTab();
       case 'portals':
         return renderPortalEndpointsTab();
       default:
@@ -1052,7 +1188,6 @@ ${message}
               <Tab value="sources">Identity Sources</Tab>
               <Tab value="groups">Tenant Groups</Tab>
               <Tab value="units">Administrative Units</Tab>
-              <Tab value="federation">Federation Endpoints</Tab>
               <Tab value="portals">Portal Endpoints</Tab>
             </TabList>
           </div>
@@ -1075,6 +1210,9 @@ ${message}
         {/* Feedback Widget */}
         {renderFeedbackDialog()}
         {renderFeedbackButton()}
+        
+        {/* Side Panel */}
+        {renderSidePanel()}
       </div>
     </FluentProvider>
   );
